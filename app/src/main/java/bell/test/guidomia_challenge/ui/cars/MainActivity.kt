@@ -1,4 +1,4 @@
-package bell.test.guidomia_challenge.ui
+package bell.test.guidomia_challenge.ui.cars
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

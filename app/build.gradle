@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlin-android'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -41,10 +42,9 @@ android {
 dependencies {
     def viewModelVersion = "2.6.1"
     def coroutineVersion = "1.6.4"
-    def roomVersion = "2.5.1"
-    def retrofitVersion = "2.9.0"
     def moshiVersion = "1.13.0"
     def navigationVersion = "2.5.3"
+    def daggerHiltVersion = "2.45"
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -59,15 +59,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
 
-    // Room
-    implementation "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-    implementation "androidx.room:room-ktx:$roomVersion"
-
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
-
     // Moshi
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
@@ -76,6 +67,10 @@ dependencies {
     // Navigation Component
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+
+    //Dagger Hilt
+    implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$daggerHiltVersion"
 
     // Unit Test
     testImplementation 'junit:junit:4.13.2'
