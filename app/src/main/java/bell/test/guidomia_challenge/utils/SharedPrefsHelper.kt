@@ -1,9 +1,11 @@
 package bell.test.guidomia_challenge.utils
 
 import android.content.SharedPreferences
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class SharedPrefsHelper constructor(
+@Singleton
+class SharedPrefsHelper @Inject constructor(
     var mSharedPreferences: SharedPreferences,
 ) {
 

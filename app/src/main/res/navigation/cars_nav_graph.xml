@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/carsHomeFragment"
-        android:name="bell.test.guidomia_challenge.ui.fragments.CarsHomeFragment"
-        android:label="CarsHomeFragment"
+        android:name="bell.test.guidomia_challenge.ui.cars.fragment.CarsHomeFragment"
+        android:label="fragment_cars_home"
         tools:layout="@layout/fragment_cars_home" />
 </navigation>
