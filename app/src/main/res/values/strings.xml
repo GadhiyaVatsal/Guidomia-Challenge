@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Guidomia</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="header_content_description">Tacoma 2021 Image</string>
+    <string name="header_title">Tacoma 2021</string>
+    <string name="header_description">Get your\'s now</string>
+    <string name="unknown_error_message">Unknown error!</string>
+    <string name="price_prefix">Price : </string>
+    <string name="pros_prefix">Pros : </string>
+    <string name="cons_prefix">Cons : </string>
+    <string name="card_filter_title">Filters</string>
 </resources>
