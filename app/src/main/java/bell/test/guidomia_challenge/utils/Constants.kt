@@ -12,4 +12,5 @@ package bell.test.guidomia_challenge.utils
 
      //TAG
      const val TAG_CARS_FRAGMENT = "cars_home_fragment"
+     const val TAG_CARS_VIEW_MODEL = "cars_home_view_model"
 }

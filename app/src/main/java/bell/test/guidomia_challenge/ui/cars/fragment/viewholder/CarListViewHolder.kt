@@ -6,6 +6,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.BulletSpan
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
@@ -14,10 +15,12 @@ import bell.test.guidomia_challenge.R
 import bell.test.guidomia_challenge.databinding.CarItemLayoutBinding
 import bell.test.guidomia_challenge.ui.cars.fragment.CarsHomeViewModel
 import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
+import bell.test.guidomia_challenge.utils.di.ResourcesProvider
 import bell.test.guidomia_challenge.utils.helper.FunctionHelper.getPriceToDisplay
+import javax.inject.Inject
 
-class CarListViewHolder(
-    private val binding: CarItemLayoutBinding
+class CarListViewHolder @Inject constructor(
+    private val binding: CarItemLayoutBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -37,7 +40,7 @@ class CarListViewHolder(
                     binding.tvProsList.text = pros
                 }
                 buildConsString(carEntity)?.let { cons ->
-                    if(prosList == null || prosList.isNullOrEmpty()) {
+                    if(prosList.isNullOrEmpty()) {
                         val topMargin = binding.root.context.resources.getDimensionPixelSize(R.dimen.margin_20)
 
                         val layoutParam = binding.tvConsTitle.layoutParams as? MarginLayoutParams
@@ -78,7 +81,7 @@ class CarListViewHolder(
             if(!str.isNullOrEmpty()){
                 val string = SpannableString(str)
                 string.setSpan(
-                    binding.root.context?.getColor(R.color.orange)?.let { BulletSpan(40, it, 10) },
+                    BulletSpan(40, binding.root.context.getColor(R.color.orange), 10),
                     0,
                     string.length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

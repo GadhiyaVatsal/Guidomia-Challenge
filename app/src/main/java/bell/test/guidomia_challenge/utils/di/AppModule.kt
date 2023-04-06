@@ -1,7 +1,8 @@
-package bell.test.guidomia_challenge.utils
+package bell.test.guidomia_challenge.utils.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import bell.test.guidomia_challenge.utils.BaseApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

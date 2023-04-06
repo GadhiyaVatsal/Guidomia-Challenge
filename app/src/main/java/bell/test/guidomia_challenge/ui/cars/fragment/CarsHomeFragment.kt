@@ -21,11 +21,10 @@ import bell.test.guidomia_challenge.databinding.CarHeaderBinding
 import bell.test.guidomia_challenge.databinding.CardFilterBinding
 import bell.test.guidomia_challenge.databinding.FragmentCarsHomeBinding
 import bell.test.guidomia_challenge.ui.cars.fragment.adapter.CarListAdapter
-import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
-import bell.test.guidomia_challenge.ui.cars.fragment.entity.FilterValue
 import bell.test.guidomia_challenge.utils.BaseFragment
 import bell.test.guidomia_challenge.utils.Constants
 import bell.test.guidomia_challenge.utils.helper.CustomDividerItemDecoration
+import bell.test.guidomia_challenge.utils.helper.FunctionHelper.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,9 +41,6 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
     private val includeCardFilterBinding: CardFilterBinding get() = _includeCardFilterBinding!!
     private var _includeCardFilterBinding: CardFilterBinding? = null
 
-    private var filterValue = FilterValue()
-    var data: MutableList<CarEntity>? = arrayListOf()
-
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,8 +51,8 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
         _includeCardFilterBinding = CardFilterBinding.bind(binding.root)
         _includeCarHeaderBinding!!.ivHeader.setRenderEffect(
             RenderEffect.createBlurEffect(
-                2F,
-                2F,
+                3F,
+                3F,
                 Shader.TileMode.MIRROR
             )
         )
@@ -164,7 +160,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
     }
 
     override fun showError(msg: String) {
-        TODO("Not yet implemented")
+        context?.let { showShortToast(it, msg) }
     }
 
     override fun showErrorRecyclerView(msg: String, context: Context) {

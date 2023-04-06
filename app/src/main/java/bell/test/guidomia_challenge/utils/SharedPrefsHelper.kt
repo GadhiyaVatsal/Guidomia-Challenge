@@ -28,13 +28,4 @@ class SharedPrefsHelper @Inject constructor(
         mSharedPreferences.edit().clear().apply()
     }
 
-    fun getData(): String {
-        var jsonResponse = get(Constants.CARS_DATA_KEY, "")
-        if(jsonResponse.isNullOrBlank()){
-            jsonResponse = context.resources.openRawResource(R.raw.car_list)
-                .bufferedReader().use { it.readText() }
-            put(Constants.CARS_DATA_KEY, jsonResponse)
-        }
-        return jsonResponse
-    }
 }
