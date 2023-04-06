@@ -21,7 +21,7 @@ class CustomDividerItemDecoration(
 
             val params = child.layoutParams as RecyclerView.LayoutParams
             val top = child.bottom + params.bottomMargin + padding
-            val bottom = top + divider.intrinsicHeight + 2
+            val bottom = top + divider.intrinsicHeight
 
             divider.setBounds(left, top, right, bottom)
             divider.draw(canvas)

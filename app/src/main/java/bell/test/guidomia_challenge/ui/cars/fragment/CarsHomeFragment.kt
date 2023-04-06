@@ -1,5 +1,6 @@
 package bell.test.guidomia_challenge.ui.cars.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.RenderEffect
 import android.graphics.Shader
@@ -133,6 +134,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun setUpObserver() {
 
         viewModel.makeFilterData.observe(this, Observer {
@@ -145,7 +147,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
 
         viewModel.carEntityData.observe(this, Observer {
             binding.rvCars.recycledViewPool.clear()
-            carAdapter.updateList(viewModel.data)
+            carAdapter.updateList(it)
             carAdapter.notifyDataSetChanged()
         })
     }

@@ -1,7 +1,10 @@
 package bell.test.guidomia_challenge.ui.cars.fragment.adapter
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import bell.test.guidomia_challenge.databinding.CarItemLayoutBinding
@@ -17,6 +20,7 @@ class CarListAdapter @Inject constructor(
 
     private var carData = ArrayList<CarEntity>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(newData: List<CarEntity>) {
         val oldItems = ArrayList(this.carData)
         this.carData.clear()
@@ -54,6 +58,7 @@ class CarListAdapter @Inject constructor(
         return viewHolder
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onBindViewHolder(holder: CarListViewHolder, position: Int) {
         carData[position].let { holder.setData(it, position, viewModel) }
     }

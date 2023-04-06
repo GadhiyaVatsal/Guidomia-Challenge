@@ -30,7 +30,7 @@ class CarsHomeViewModel @Inject constructor(
     private var filterValue = FilterValue()
     val gson = Gson()
 
-    var data = ArrayList<CarEntity>()
+    private var data = ArrayList<CarEntity>()
 
     fun bindView() {
         viewInteractor.setUpView()
@@ -43,7 +43,7 @@ class CarsHomeViewModel @Inject constructor(
             viewInteractor.showLoading()
             try {
                 val jsonCarsData = sharedPrefsHelper.getData()
-                Log.d(TAG, "fetchData: ${jsonCarsData}")
+                Log.d(TAG, "fetchData: $jsonCarsData")
                 val listType: Type = object : TypeToken<ArrayList<CarEntity>>() {}.type
                 val carEntityList: ArrayList<CarEntity> = gson.fromJson(jsonCarsData, listType)
                 val allCars = carEntityList.map {
@@ -51,17 +51,16 @@ class CarsHomeViewModel @Inject constructor(
                     it
                 }
                 allCars[0].expanded = true
-                carEntityData.postValue(carEntityList)
                 allCars.let {
                     data.addAll(it)
                 }
+                carEntityData.postValue(data)
                 buildFilterData()
                 viewInteractor.hideLoading()
                 Log.d(TAG, "fetchData Mutable: ${carEntityData.value}")
-                Log.d(TAG, "fetchData Data: ${data[0].expanded} ${data[0].image}")
             } catch (e: Exception) {
                 viewInteractor.hideLoading()
-                Log.e(TAG, "fetchData: ${e.message}")
+                Log.e(TAG, "Unknown Error Message: ${e.message}")
             }
         }
     }
@@ -88,31 +87,36 @@ class CarsHomeViewModel @Inject constructor(
             make == Constants.ANY_MAKE && model == Constants.ANY_MODEL -> filterData =
                 data
             make == Constants.ANY_MAKE -> data.forEach {
-                if (model == it.model) filterData.add(
-                    it
-                )
+                if (model == it.model) filterData.add(it)
             }
             model == Constants.ANY_MODEL -> data.forEach {
-                if (make == it.make) filterData.add(
-                    it
-                )
+                if (make == it.make) filterData.add(it)
             }
             else -> data.forEach {
-                if (it.make == make && it.model == model) filterData.add(
-                    it
-                )
+                if (it.make == make && it.model == model) filterData.add(it)
             }
         }
+
+//        expandContainer(0, filterData)
+        filterData[0].expanded = true
+        filterData.map {
+            if (filterData.indexOf(it) != 0) {
+                it.expanded = false
+            }
+        }
+
+        carEntityData.postValue(filterData)
     }
 
     fun expandContainer(position: Int) {
-        data.get(position).expanded =
-            !data.get(position).expanded
+        data[position].expanded =
+            !data[position].expanded
         data.map {
             if (data.indexOf(it) != position) {
                 it.expanded = false
             }
         }
+        carEntityData.postValue(data)
     }
 
 }

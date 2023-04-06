@@ -6,6 +6,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.BulletSpan
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@ import bell.test.guidomia_challenge.R
 import bell.test.guidomia_challenge.databinding.CarItemLayoutBinding
 import bell.test.guidomia_challenge.ui.cars.fragment.CarsHomeViewModel
 import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
-import bell.test.guidomia_challenge.utils.Common.getPriceToDisplay
+import bell.test.guidomia_challenge.utils.helper.FunctionHelper.getPriceToDisplay
 
 class CarListViewHolder(
     private val binding: CarItemLayoutBinding
@@ -21,13 +22,11 @@ class CarListViewHolder(
 
     @RequiresApi(Build.VERSION_CODES.P)
     fun setData(carEntity: CarEntity, position: Int, viewModel: CarsHomeViewModel) {
-        val context = binding.root.context
         with(carEntity) {
-            binding.tvPrice.text = marketPrice?.getPriceToDisplay() ?: "0"
+            binding.tvPrice.text = marketPrice?.toInt()?.getPriceToDisplay() ?: "0"
             binding.tvCarName.text = model
             binding.ratingBar.rating = rating?.toFloat() ?: 5.0.toFloat()
             binding.ivCar.setImageResource(image!!)
-            binding.containerCarSubDetails.visibility = if(expanded) View.VISIBLE else View.GONE
             binding.carContainer.setOnClickListener {
                 viewModel.expandContainer(position)
             }
@@ -38,6 +37,15 @@ class CarListViewHolder(
                     binding.tvProsList.text = pros
                 }
                 buildConsString(carEntity)?.let { cons ->
+                    if(prosList == null || prosList.isNullOrEmpty()) {
+                        val topMargin = binding.root.context.resources.getDimensionPixelSize(R.dimen.margin_20)
+
+                        val layoutParam = binding.tvConsTitle.layoutParams as? MarginLayoutParams
+                        layoutParam?.let {
+                            it.topMargin = topMargin
+                            binding.tvConsTitle.layoutParams = it
+                        }
+                    }
                     binding.tvConsTitle.isVisible = true
                     binding.tvConsList.isVisible = true
                     binding.tvConsList.text = cons
