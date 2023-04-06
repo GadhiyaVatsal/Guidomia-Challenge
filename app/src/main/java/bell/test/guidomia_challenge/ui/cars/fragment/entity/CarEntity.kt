@@ -22,7 +22,7 @@ class CarEntity(
    var image: Int? = null
 ) {
    fun setImage() {
-      when (model) {
+      when (this.model) {
          "GLE coupe" -> image = R.drawable.mercedez_benz_glc
          "3300i" -> image = R.drawable.bmw_330i
          "Roadster" -> image = R.drawable.alpine_roadster

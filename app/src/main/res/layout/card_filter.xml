@@ -16,38 +16,39 @@
             android:padding="@dimen/margin_16">
 
             <TextView
-                android:id="@+id/card_filters_title"
+                android:id="@+id/tvFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/card_filter_title"
                 android:textColor="@color/white"
+                android:textSize="@dimen/size_16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
-                android:id="@+id/card_filter_make_spinner"
+                android:id="@+id/makeSpinner"
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dimen_35"
                 android:layout_margin="@dimen/margin_8"
                 android:background="@drawable/bg_spinner"
                 android:backgroundTint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/card_filters_title" />
+                app:layout_constraintTop_toBottomOf="@id/tvFilter" />
 
             <Spinner
-                android:id="@+id/card_filter_model_spinner"
+                android:id="@+id/modelSpinner"
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dimen_35"
                 android:layout_marginTop="@dimen/margin_8"
                 android:background="@drawable/bg_spinner"
                 android:backgroundTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/card_filter_make_spinner"
-                app:layout_constraintStart_toStartOf="@id/card_filter_make_spinner"
-                app:layout_constraintTop_toBottomOf="@id/card_filter_make_spinner" />
+                app:layout_constraintEnd_toEndOf="@id/makeSpinner"
+                app:layout_constraintStart_toStartOf="@id/makeSpinner"
+                app:layout_constraintTop_toBottomOf="@id/makeSpinner" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

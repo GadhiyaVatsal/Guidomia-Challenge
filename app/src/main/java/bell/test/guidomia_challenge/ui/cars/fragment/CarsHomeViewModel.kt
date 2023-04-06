@@ -3,7 +3,6 @@ package bell.test.guidomia_challenge.ui.cars.fragment
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import bell.test.guidomia_challenge.R
 import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
 import bell.test.guidomia_challenge.ui.cars.fragment.entity.FilterValue
 import bell.test.guidomia_challenge.utils.BaseViewModel
@@ -20,29 +19,48 @@ private const val TAG = "CarsHomeViewModel"
 
 @HiltViewModel
 class CarsHomeViewModel @Inject constructor(
-    var sharedPrefsHelper: SharedPrefsHelper
-): BaseViewModel<CarsHomeContract>() {
+    private val sharedPrefsHelper: SharedPrefsHelper,
+) : BaseViewModel<CarsHomeContract>() {
 
     var carEntityData = MutableLiveData<ArrayList<CarEntity>>()
 
     var makeFilterData = MutableLiveData<ArrayList<String>>()
     var modelFilterData = MutableLiveData<ArrayList<String>>()
 
-
     private var filterValue = FilterValue()
     val gson = Gson()
+
+    var data = ArrayList<CarEntity>()
+
+    fun bindView() {
+        viewInteractor.setUpView()
+        viewInteractor.setUpObserver()
+        viewInteractor.setUpAdapter()
+    }
 
     fun fetchData() {
         viewModelScope.launch {
             viewInteractor.showLoading()
             try {
-                val jsonCarsData = getData()
-                val listType: Type = object : TypeToken<List<CarEntity>>() {}.type
+                val jsonCarsData = sharedPrefsHelper.getData()
+                Log.d(TAG, "fetchData: ${jsonCarsData}")
+                val listType: Type = object : TypeToken<ArrayList<CarEntity>>() {}.type
                 val carEntityList: ArrayList<CarEntity> = gson.fromJson(jsonCarsData, listType)
-                carEntityList.let { carEntityData.value?.addAll(it) }
+                val allCars = carEntityList.map {
+                    it.setImage()
+                    it
+                }
+                allCars[0].expanded = true
+                carEntityData.postValue(carEntityList)
+                allCars.let {
+                    data.addAll(it)
+                }
                 buildFilterData()
-                Log.d(TAG, "fetchData: ${carEntityData.value}")
-            }catch (e: Exception){
+                viewInteractor.hideLoading()
+                Log.d(TAG, "fetchData Mutable: ${carEntityData.value}")
+                Log.d(TAG, "fetchData Data: ${data[0].expanded} ${data[0].image}")
+            } catch (e: Exception) {
+                viewInteractor.hideLoading()
                 Log.e(TAG, "fetchData: ${e.message}")
             }
         }
@@ -56,7 +74,7 @@ class CarsHomeViewModel @Inject constructor(
             add(Constants.ANY_MODEL)
         }
 
-        carEntityData.value?.forEach { carEntityData ->
+        data.forEach { carEntityData ->
             carEntityData.make?.let { it -> makeFilter.add(it) }
             carEntityData.model?.let { it -> modelFilter.add(it) }
         }
@@ -67,20 +85,34 @@ class CarsHomeViewModel @Inject constructor(
     fun filter(make: String, model: String) {
         var filterData = ArrayList<CarEntity>()
         when {
-            make == Constants.ANY_MAKE && model == Constants.ANY_MODEL -> filterData = carEntityData.value!!
-            make == Constants.ANY_MAKE -> carEntityData.value?.forEach { if (model == it.model) filterData.add(it) }
-            model == Constants.ANY_MODEL -> carEntityData.value?.forEach { if (make == it.make) filterData.add(it) }
-            else -> carEntityData.value?.forEach { if(it.make == make && it.model == model) filterData.add(it) }
+            make == Constants.ANY_MAKE && model == Constants.ANY_MODEL -> filterData =
+                data
+            make == Constants.ANY_MAKE -> data.forEach {
+                if (model == it.model) filterData.add(
+                    it
+                )
+            }
+            model == Constants.ANY_MODEL -> data.forEach {
+                if (make == it.make) filterData.add(
+                    it
+                )
+            }
+            else -> data.forEach {
+                if (it.make == make && it.model == model) filterData.add(
+                    it
+                )
+            }
         }
     }
 
-    private fun getData(): String {
-        var jsonResponse = sharedPrefsHelper.get(Constants.CARS_DATA_KEY, "")
-        if(jsonResponse.isNullOrBlank()){
-            jsonResponse = viewInteractor.getContext().resources.openRawResource(R.raw.car_list)
-                .bufferedReader().use { it.readText() }
-            sharedPrefsHelper.put(Constants.CARS_DATA_KEY, jsonResponse)
+    fun expandContainer(position: Int) {
+        data.get(position).expanded =
+            !data.get(position).expanded
+        data.map {
+            if (data.indexOf(it) != position) {
+                it.expanded = false
+            }
         }
-        return jsonResponse
     }
+
 }

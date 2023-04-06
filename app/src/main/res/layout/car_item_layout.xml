@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/carContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/light_gray"
@@ -27,13 +28,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/tvCarName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_6"
             android:gravity="top"
-            android:textSize="@dimen/size_16"
             android:textColor="@color/dark_gray"
+            android:textSize="@dimen/size_16"
             tools:text="BMW Alpine" />
 
         <TextView
@@ -41,8 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_6"
-            android:textSize="@dimen/size_12"
             android:textColor="@color/dark_gray"
+            android:textSize="@dimen/size_12"
             tools:text="Price : 65k" />
 
         <RatingBar
@@ -51,49 +52,62 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:progressTint="@color/orange"
-            tools:rating="5"/>
+            tools:rating="5" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvProsTitle"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/containerCarSubDetails"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_12"
-        android:layout_marginTop="@dimen/margin_20"
-        android:textSize="@dimen/size_16"
-        android:textColor="@color/dark_gray"
-        android:text="@string/pros_prefix"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCar"/>
+        app:layout_constraintTop_toBottomOf="@id/ivCar">
 
-    <TextView
-        android:id="@+id/tvProsList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_20"
-        android:textSize="@dimen/size_12"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvProsTitle"/>
+        <TextView
+            android:id="@+id/tvProsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_12"
+            android:layout_marginTop="@dimen/margin_20"
+            android:text="@string/pros_prefix"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/size_16"
+            app:layout_constraintStart_toStartOf="@+id/containerCarDetails"
+            app:layout_constraintTop_toBottomOf="@+id/containerCarDetails" />
 
-    <TextView
-        android:id="@+id/tvConsTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_12"
-        android:textSize="@dimen/size_16"
-        android:textColor="@color/dark_gray"
-        android:text="@string/cons_prefix"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvProsList"/>
+        <TextView
+            android:id="@+id/tvProsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_20"
+            android:textSize="@dimen/size_12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvProsTitle" />
 
-    <TextView
-        android:id="@+id/tvConsList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_20"
-        android:textSize="@dimen/size_12"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvConsTitle"/>
+        <TextView
+            android:id="@+id/tvConsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_12"
+            android:text="@string/cons_prefix"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/size_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvProsList" />
+
+        <TextView
+            android:id="@+id/tvConsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_20"
+            android:textSize="@dimen/size_12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvConsTitle" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

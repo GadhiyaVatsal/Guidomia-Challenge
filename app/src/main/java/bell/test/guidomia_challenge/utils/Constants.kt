@@ -7,4 +7,9 @@ package bell.test.guidomia_challenge.utils
      //Filters default options
      const val ANY_MAKE = "Any Make"
      const val ANY_MODEL = "Any Model"
+
+
+
+     //TAG
+     const val TAG_CARS_FRAGMENT = "cars_home_fragment"
 }

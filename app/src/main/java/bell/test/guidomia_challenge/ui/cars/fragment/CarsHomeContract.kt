@@ -10,5 +10,6 @@ interface CarsHomeContract: ViewInteractor {
     fun hideLoading()
     fun showError(msg: String)
     fun showErrorRecyclerView(msg: String, context: Context)
-    fun getContext(): Context
+    fun setUpObserver()
+    fun setUpAdapter()
 }
