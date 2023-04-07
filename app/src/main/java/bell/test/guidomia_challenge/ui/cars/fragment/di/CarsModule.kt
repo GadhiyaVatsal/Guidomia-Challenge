@@ -10,12 +10,10 @@ import dagger.hilt.android.components.FragmentComponent
 @InstallIn(FragmentComponent::class)
 @Module
 class CarsModule {
-
     @Provides
     fun bindFragment(fragment: Fragment): CarsHomeFragment{
         return fragment as CarsHomeFragment
     }
-
     @Provides
     fun view(fragment: CarsHomeFragment) : CarsHomeFragment{
         return fragment

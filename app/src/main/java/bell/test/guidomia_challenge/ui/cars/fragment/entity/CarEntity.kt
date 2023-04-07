@@ -18,15 +18,4 @@ class CarEntity(
    val consList: List<String?>?,
    @field:SerializedName("expanded")
    var expanded: Boolean = false,
-   @field:SerializedName("image")
-   var image: Int? = null
-) {
-   fun setImage() {
-      when (this.model) {
-         "GLE coupe" -> image = R.drawable.mercedez_benz_glc
-         "3300i" -> image = R.drawable.bmw_330i
-         "Roadster" -> image = R.drawable.alpine_roadster
-         "Range Rover" -> image = R.drawable.range_rover
-      }
-   }
-}
+)

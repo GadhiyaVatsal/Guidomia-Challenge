@@ -28,8 +28,7 @@ import bell.test.guidomia_challenge.utils.helper.FunctionHelper.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel>(),
-    CarsHomeContract {
+class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel>(){
 
     private lateinit var carAdapter: CarListAdapter
     private lateinit var makeSpinnerAdapter: ArrayAdapter<String>
@@ -44,29 +43,30 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.viewInteractor = this
-        viewModel.fetchData()
         carAdapter = CarListAdapter(viewModel)
         _includeCarHeaderBinding = CarHeaderBinding.bind(binding.root)
         _includeCardFilterBinding = CardFilterBinding.bind(binding.root)
-        _includeCarHeaderBinding!!.ivHeader.setRenderEffect(
-            RenderEffect.createBlurEffect(
-                3F,
-                3F,
-                Shader.TileMode.MIRROR
-            )
-        )
-        viewModel.bindView()
+        setUpView()
+        setUpAdapter()
+        setUpObserver()
     }
 
-    override fun setUpView() {
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun setUpView() {
         includeCarHeaderBinding.apply {
             tvHeaderTitle.text = getString(R.string.header_title)
             tvHeaderDescription.text = getString(R.string.header_description)
+            ivHeader.setRenderEffect(
+                RenderEffect.createBlurEffect(
+                    3F,
+                    3F,
+                    Shader.TileMode.MIRROR
+                )
+            )
         }
     }
 
-    override fun setUpAdapter() {
+    private fun setUpAdapter() {
         makeSpinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item)
         _includeCardFilterBinding?.apply {
             makeSpinner.adapter = makeSpinnerAdapter
@@ -85,9 +85,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
                             )
                         }
                     }
-
                     override fun onNothingSelected(p0: AdapterView<*>?) {
-
                     }
                 }
         }
@@ -106,13 +104,10 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
                         viewModel.filter(make = makeSpinner.selectedItem.toString(), model = it)
                     }
                 }
-
                 override fun onNothingSelected(p0: AdapterView<*>?) {
-
                 }
             }
         }
-
 
         binding.rvCars.apply {
             val linearLayoutManager = LinearLayoutManager(context)
@@ -122,7 +117,6 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
             val padding = resources.getDimensionPixelSize(R.dimen.margin_12)
             val customDividerItemDecoration =
                 dividerDrawable?.let { CustomDividerItemDecoration(it, padding) }
-
             if (customDividerItemDecoration != null) {
                 addItemDecoration(customDividerItemDecoration)
             }
@@ -131,48 +125,52 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun setUpObserver() {
-
-        viewModel.makeFilterData.observe(this, Observer {
+    fun setUpObserver() {
+        viewModel.makeFilterData.observe(viewLifecycleOwner, Observer {
             makeSpinnerAdapter.addAll(it)
         })
 
-        viewModel.modelFilterData.observe(this, Observer {
+        viewModel.modelFilterData.observe(viewLifecycleOwner, Observer {
             modelSpinnerAdapter.addAll(it)
         })
 
-        viewModel.carEntityData.observe(this, Observer {
+        viewModel.carEntityData.observe(viewLifecycleOwner, Observer {
             binding.rvCars.recycledViewPool.clear()
             carAdapter.updateList(it)
             carAdapter.notifyDataSetChanged()
         })
-    }
 
-    override fun showLoading() {
+        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer { errorMsg ->
+            if (errorMsg != null) {
+                showError(errorMsg)
+            }
+        })
+    }
+    private fun showLoading() {
 
         binding.progressBar.visibility = View.VISIBLE
         binding.rvCars.visibility = View.GONE
     }
-
-    override fun hideLoading() {
+    private fun hideLoading() {
         binding.progressBar.visibility = View.GONE
         binding.rvCars.visibility = View.VISIBLE
     }
-
-    override fun showError(msg: String) {
+    private fun showError(msg: String) {
         context?.let { showShortToast(it, msg) }
     }
 
-    override fun showErrorRecyclerView(msg: String, context: Context) {
-        TODO("Not yet implemented")
-    }
-
     override val viewModel: CarsHomeViewModel by viewModels()
-
     companion object {
         val TAG: String = Constants.TAG_CARS_FRAGMENT
     }
-
     override fun setBinding(
         layoutInflater: LayoutInflater,
         container: ViewGroup?

@@ -2,12 +2,7 @@ package bell.test.guidomia_challenge.utils
 
 import androidx.lifecycle.ViewModel
 
-abstract class BaseViewModel<VI: ViewInteractor>: ViewModel() {
-
-
-    lateinit var viewInteractor: VI
-
-
+abstract class BaseViewModel: ViewModel() {
     override fun onCleared() {
         super.onCleared()
     }

@@ -1,78 +1,61 @@
 package bell.test.guidomia_challenge.ui.cars.fragment
 
-import android.content.res.Resources
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import bell.test.guidomia_challenge.R
 import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
+import bell.test.guidomia_challenge.ui.cars.repository.CarRepository
 import bell.test.guidomia_challenge.utils.BaseViewModel
 import bell.test.guidomia_challenge.utils.Constants
-import bell.test.guidomia_challenge.utils.Constants.TAG_CARS_VIEW_MODEL
-import bell.test.guidomia_challenge.utils.SharedPrefsHelper
-import bell.test.guidomia_challenge.utils.di.ResourcesProvider
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import bell.test.guidomia_challenge.utils.helper.FunctionHelper
+import bell.test.guidomia_challenge.utils.helper.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import java.io.IOException
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 
 @HiltViewModel
 class CarsHomeViewModel @Inject constructor(
-    private val sharedPrefsHelper: SharedPrefsHelper,
-    private val resourcesProvider: ResourcesProvider
-) : BaseViewModel<CarsHomeContract>() {
+    private val carRepository: CarRepository,
+) : BaseViewModel() {
 
-    var carEntityData = MutableLiveData<ArrayList<CarEntity>>()
-    var makeFilterData = MutableLiveData<ArrayList<String>>()
-    var modelFilterData = MutableLiveData<ArrayList<String>>()
+    private var _carEntityData = MutableLiveData<ArrayList<CarEntity>>()
+    var carEntityData: LiveData<ArrayList<CarEntity>> = _carEntityData
 
-    private val gson = Gson()
+    private var _makeFilterData = MutableLiveData<ArrayList<String>>()
+    var makeFilterData : LiveData<ArrayList<String>> = _makeFilterData
+
+    private var _modelFilterData = MutableLiveData<ArrayList<String>>()
+    var modelFilterData: LiveData<ArrayList<String>> = _modelFilterData
 
     private var data = ArrayList<CarEntity>()
     private var currentList = ArrayList<CarEntity>()
-
-    fun bindView() {
-        viewInteractor.setUpView()
-        viewInteractor.setUpObserver()
-        viewInteractor.setUpAdapter()
+    val loading = MutableLiveData<Boolean>()
+    val errorMessage = MutableLiveData<String>()
+    init {
+        fetchData()
     }
-
     fun fetchData() {
-        viewModelScope.launch {
-            viewInteractor.showLoading()
-            try {
-                val jsonCarsData = getData()
-                val listType: Type = object : TypeToken<ArrayList<CarEntity>>() {}.type
-                val carEntityList: ArrayList<CarEntity> = gson.fromJson(jsonCarsData, listType)
-                val allCars = carEntityList.map {
-                    it.setImage()
-                    it
+        carRepository.getCars().observeForever { resource ->
+            when(resource.status) {
+                Resource.Status.SUCCESS -> {
+                    resource.data?.let {
+                        data  = ArrayList(it)
+                        currentList = ArrayList(it)
+                        buildFilterData()
+                        _carEntityData.postValue(currentList)
+
+                        loading.value = false
+                    }
                 }
-                allCars[0].expanded = true
-                allCars.let {
-                    data.addAll(it)
+                Resource.Status.ERROR -> {
+                    loading.value = false
+                    resource.message?.let { errorMessage.value = it }
                 }
-                carEntityData.postValue(data)
-                currentList = data
-                buildFilterData()
-                viewInteractor.hideLoading()
-                Log.d(TAG_CARS_VIEW_MODEL, "fetchData: Retrieved Car data $allCars")
-            } catch (e: IOException) {
-                viewInteractor.hideLoading()
-                viewInteractor.showError("Error reading local file: ${e.message}")
-                Log.e(TAG_CARS_VIEW_MODEL, "fetchData: Error reading local file: ${e.message}")
-            } catch (e: Exception) {
-                viewInteractor.hideLoading()
-                viewInteractor.showError("Unknown Error Message: ${e.message}")
-                Log.e(TAG_CARS_VIEW_MODEL, "fetchData: Unknown Error Message ${e.message}")
+                Resource.Status.LOADING -> {
+                    loading.value = true
+                }
             }
         }
     }
-
     private fun buildFilterData() {
         val makeFilter = ArrayList<String>().apply {
             add(Constants.ANY_MAKE)
@@ -85,52 +68,31 @@ class CarsHomeViewModel @Inject constructor(
             carEntityData.make?.let { it -> makeFilter.add(it) }
             carEntityData.model?.let { it -> modelFilter.add(it) }
         }
-        makeFilterData.postValue(makeFilter)
-        modelFilterData.postValue(modelFilter)
+        _makeFilterData.postValue(makeFilter)
+        _modelFilterData.postValue(modelFilter)
     }
-
     fun filter(make: String, model: String) {
-        var filterData = ArrayList<CarEntity>()
-        when {
-            make == Constants.ANY_MAKE && model == Constants.ANY_MODEL -> filterData =
-                data
-            make == Constants.ANY_MAKE -> data.forEach {
-                if (model == it.model) filterData.add(it)
-            }
-            model == Constants.ANY_MODEL -> data.forEach {
-                if (make == it.make) filterData.add(it)
-            }
-            else -> data.forEach {
-                if (it.make == make || it.model == model) filterData.add(it)
+        carRepository.filter(make, model).observeForever { resource ->
+            when (resource.status) {
+                Resource.Status.SUCCESS -> {
+                    resource.data?.let { carList ->
+                        currentList = ArrayList(carList)
+                        expandContainer(0, true)
+
+                        loading.value = false
+                    }
+                }
+                Resource.Status.LOADING -> {
+                    loading.value = true
+                }
+                Resource.Status.ERROR -> {
+                    loading.value = false
+                    resource.message?.let { errorMessage.value = it }
+                }
             }
         }
-
-        currentList = filterData
-        expandContainer(0, true)
     }
-
     fun expandContainer(position: Int, isFirst: Boolean = false) {
-        if(isFirst) currentList[position].expanded = true
-        else currentList[position].expanded =
-            !currentList[position].expanded
-
-        currentList.map {
-            if (currentList.indexOf(it) != position) {
-                it.expanded = false
-            }
-        }
-
-        carEntityData.postValue(currentList)
-    }
-
-
-    private fun getData(): String {
-        var jsonResponse = sharedPrefsHelper[Constants.CARS_DATA_KEY, ""]
-        if (jsonResponse.isNullOrBlank()) {
-            jsonResponse = resourcesProvider.getRawResource(R.raw.car_list)
-                .bufferedReader().use { it.readText() }
-            sharedPrefsHelper.put(Constants.CARS_DATA_KEY, jsonResponse)
-        }
-        return jsonResponse
+        _carEntityData.postValue(FunctionHelper.expandContainerHelper(position, isFirst, currentList))
     }
 }
