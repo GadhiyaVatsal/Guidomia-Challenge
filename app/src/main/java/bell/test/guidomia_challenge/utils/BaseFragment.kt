@@ -11,9 +11,7 @@ import androidx.viewbinding.ViewBinding
 abstract class BaseFragment<B : ViewBinding, VM : ViewModel> : Fragment() {
 
     protected lateinit var binding: B
-
     protected abstract val viewModel: VM
-
     abstract fun setBinding(layoutInflater: LayoutInflater, container: ViewGroup?): B
 
     override fun onCreateView(
@@ -26,11 +24,9 @@ abstract class BaseFragment<B : ViewBinding, VM : ViewModel> : Fragment() {
         }
         return binding.root
     }
-
     override fun onDestroy() {
         super.onDestroy()
     }
-
     override fun onPause() {
         super.onPause()
     }

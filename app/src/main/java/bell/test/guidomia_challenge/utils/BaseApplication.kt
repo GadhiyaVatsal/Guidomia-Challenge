@@ -6,11 +6,9 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class BaseApplication : Application() {
-
     companion object {
         lateinit var INSTANCE: BaseApplication
     }
-
     @Inject
     lateinit var sharedPrefsHelper: SharedPrefsHelper
 

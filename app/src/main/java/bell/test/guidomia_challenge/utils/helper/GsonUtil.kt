@@ -8,7 +8,6 @@ import java.io.InputStream
 import java.lang.reflect.Type
 
 object GsonUtil {
-
     fun convertJsonToDataList(jsonData: String): ArrayList<CarEntity> {
         val listType: Type = object : TypeToken<ArrayList<CarEntity>>() {}.type
         return (Gson().fromJson(jsonData, listType) ?: ArrayList<CarEntity>())

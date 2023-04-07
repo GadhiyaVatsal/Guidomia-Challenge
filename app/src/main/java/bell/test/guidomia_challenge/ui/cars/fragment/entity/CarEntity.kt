@@ -1,6 +1,5 @@
 package bell.test.guidomia_challenge.ui.cars.fragment.entity
 
-import bell.test.guidomia_challenge.R
 import com.google.gson.annotations.SerializedName
 
 class CarEntity(

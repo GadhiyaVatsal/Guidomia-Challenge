@@ -66,6 +66,4 @@ class CarListAdapter @Inject constructor(
     override fun getItemCount(): Int {
         return carData.size
     }
-
-
 }

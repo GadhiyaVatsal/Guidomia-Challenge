@@ -18,13 +18,16 @@ class CarsHomeViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private var _carEntityData = MutableLiveData<ArrayList<CarEntity>>()
-    var carEntityData: LiveData<ArrayList<CarEntity>> = _carEntityData
+    val carEntityData: LiveData<ArrayList<CarEntity>>
+        get() = _carEntityData
 
     private var _makeFilterData = MutableLiveData<ArrayList<String>>()
-    var makeFilterData : LiveData<ArrayList<String>> = _makeFilterData
+    val makeFilterData : LiveData<ArrayList<String>>
+        get() = _makeFilterData
 
     private var _modelFilterData = MutableLiveData<ArrayList<String>>()
-    var modelFilterData: LiveData<ArrayList<String>> = _modelFilterData
+    val modelFilterData: LiveData<ArrayList<String>>
+    get() = _modelFilterData
 
     private var data = ArrayList<CarEntity>()
     private var currentList = ArrayList<CarEntity>()

@@ -7,7 +7,6 @@ import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
 import bell.test.guidomia_challenge.utils.Constants
 
 object FunctionHelper {
-
     fun Int.getPriceToDisplay(): String {
         return when {
             this >= 1000000 -> "${this.div(1000000)}M"

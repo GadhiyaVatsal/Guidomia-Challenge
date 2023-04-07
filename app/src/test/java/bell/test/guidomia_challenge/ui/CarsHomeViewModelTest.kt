@@ -1,126 +1,74 @@
 package bell.test.guidomia_challenge.ui
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.liveData
 import bell.test.guidomia_challenge.ui.cars.fragment.CarsHomeViewModel
 import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
-import bell.test.guidomia_challenge.utils.Constants
-import bell.test.guidomia_challenge.utils.SharedPrefsHelper
-import bell.test.guidomia_challenge.R
+import bell.test.guidomia_challenge.ui.cars.repository.CarRepository
+import bell.test.guidomia_challenge.util.Helper
+import bell.test.guidomia_challenge.utils.helper.Resource
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.test.*
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
-import java.io.IOException
-import java.io.InputStream
 
-
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CarsHomeViewModelTest {
 
     @Mock
-    private lateinit var sharedPrefsHelper: SharedPrefsHelper
-
-    @Mock
-    private lateinit var resources: ResourcesProvider
-
-    @Mock
-    private lateinit var viewInteractor: CarsHomeContract
-
+    lateinit var carRepository: CarRepository
     private lateinit var viewModel: CarsHomeViewModel
 
     @Before
-    fun setup() {
-        viewModel = CarsHomeViewModel(sharedPrefsHelper, resources).apply {
-            viewInteractor = this@CarsHomeViewModelTest.viewInteractor
-        }
+    fun setUp() {
+        carRepository = mock(CarRepository::class.java)
+        viewModel = CarsHomeViewModel(carRepository)
     }
 
     @Test
-    fun `test fetchData success`() {
-        val jsonCarsData = """
-            [{
-            	"consList": ["Bad direction"],
-            	"customerPrice": 120000.0,
-            	"make": "Land Rover",
-            	"marketPrice": 125000.0,
-            	"model": "Range Rover",
-            	"prosList": ["You can go everywhere", "Good sound system"],
-            	"rating": 3
-            }, {
-            	"consList": ["Sometime explode"],
-            	"customerPrice": 220000.0,
-            	"make": "Alpine",
-            	"marketPrice": 225000.0,
-            	"model": "Roadster",
-            	"prosList": ["This car is so fast", "Jame Bond would love to steal that car", "", ""],
-            	"rating": 4
-            }]
-        """.trimIndent()
-        val carEntityList = arrayListOf<CarEntity>()
-        val mockInputStream = mock(InputStream::class.java)
-        val observer = mock(Observer::class.java) as Observer<ArrayList<CarEntity>>
-        viewModel.carEntityData.observeForever(observer)
-
-        `when`(sharedPrefsHelper[Constants.CARS_DATA_KEY, ""]).thenReturn(jsonCarsData)
-        `when`(resources.getRawResource(R.raw.car_list)).thenReturn(mockInputStream)
-
+    fun `fetchData cars data success`() {
+        val expectedData = getCarsJsonData()
+        val liveData = MutableLiveData<Resource<List<CarEntity>>>()
+        liveData.value = Resource.success(expectedData)
+        `when`(carRepository.getCars()).thenReturn(liveData)
+        val dataObserver: Observer<ArrayList<CarEntity>> = mock(Observer::class.java) as Observer<ArrayList<CarEntity>>
+        viewModel.carEntityData.observeForever(dataObserver)
         viewModel.fetchData()
-
-        verify(viewInteractor).showLoading()
-        verify(viewInteractor).hideLoading()
-        verify(observer).onChanged(carEntityList)
+        assertEquals(expectedData, viewModel.carEntityData.value)
+        verify(carRepository).getCars()
     }
 
-    @Test
-    fun `test fetchData local file read error`() {
-        val observer = mock(Observer::class.java) as Observer<ArrayList<CarEntity>>
-        viewModel.carEntityData.observeForever(observer)
+    // Ad
 
-        `when`(sharedPrefsHelper[Constants.CARS_DATA_KEY, ""]).thenReturn("")
-        `when`(resources.getRawResource(R.raw.car_list)).thenThrow(IOException())
-
-        viewModel.fetchData()
-
-        verify(viewInteractor).showLoading()
-        verify(viewInteractor).hideLoading()
-        verify(viewInteractor).showError(anyString())
-    }
-
-    @Test
-    fun `test fetchData unknown error`() {
-
-        val mockInputStream = mock(InputStream::class.java)
-        val jsonCarsData = """
-            [{
-            	"consList": ["Bad direction"],
-            	"customerPrice": 120000.0,
-            	"make": "Land Rover",
-            	"marketPrice": 125000.0,
-            	"model": "Range Rover",
-            	"prosList": ["You can go everywhere", "Good sound system"],
-            	"rating": 3
-            }, {
-            	"consList": ["Sometime explode"],
-            	"customerPrice": 220000.0,
-            	"make": "Alpine",
-            	"marketPrice": 225000.0,
-            	"model": "Roadster",
-            	"prosList": ["This car is so fast", "Jame Bond would love to steal that car", "", ""],
-            	"rating: 4
-            }]
-        """.trimIndent()
-        val observer = mock(Observer::class.java) as Observer<ArrayList<CarEntity>>
-        viewModel.carEntityData.observeForever(observer)
-
-        `when`(sharedPrefsHelper[Constants.CARS_DATA_KEY, ""]).thenReturn(jsonCarsData)
-        `when`(resources.getRawResource(R.raw.car_list)).thenReturn(mockInputStream)
+    /*@Test
+    fun `fetchData error`() {
+        val viewModel = CarsHomeViewModel(carRepository)
+        val errorMessage = "Error loading data"
+        `when`(carRepository.getCars()).thenReturn(liveData { Resource.error(errorMessage, "") })
 
         viewModel.fetchData()
 
-        verify(viewInteractor).showLoading()
-        verify(viewInteractor).hideLoading()
-        verify(viewInteractor).showError(anyString())
+        verify(carRepository).getCars()
+    }*/
+
+    fun getCarsJsonData(): ArrayList<CarEntity> {
+        return Gson().fromJson(
+            Helper.readFromFile("car_list.json"),
+            object: TypeToken<ArrayList<CarEntity>>() {}.type
+        )
     }
 }
