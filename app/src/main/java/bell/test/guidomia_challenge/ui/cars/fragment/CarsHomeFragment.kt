@@ -154,23 +154,28 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
             }
         })
     }
+
     private fun showLoading() {
 
         binding.progressBar.visibility = View.VISIBLE
         binding.rvCars.visibility = View.GONE
     }
+
     private fun hideLoading() {
         binding.progressBar.visibility = View.GONE
         binding.rvCars.visibility = View.VISIBLE
     }
+
     private fun showError(msg: String) {
         context?.let { showShortToast(it, msg) }
     }
 
     override val viewModel: CarsHomeViewModel by viewModels()
+
     companion object {
         val TAG: String = Constants.TAG_CARS_FRAGMENT
     }
+
     override fun setBinding(
         layoutInflater: LayoutInflater,
         container: ViewGroup?

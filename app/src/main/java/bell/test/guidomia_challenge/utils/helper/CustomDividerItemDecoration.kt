@@ -28,11 +28,16 @@ class CustomDividerItemDecoration(
         }
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         if (parent.getChildAdapterPosition(view) == state.itemCount - 1) {
-            outRect.set(0,0,0,padding)
+            outRect.set(0, 0, 0, padding)
         } else {
-            outRect.set(0, 0, 0, divider.intrinsicHeight + (2*padding))
+            outRect.set(0, 0, 0, divider.intrinsicHeight + (2 * padding))
         }
     }
 }

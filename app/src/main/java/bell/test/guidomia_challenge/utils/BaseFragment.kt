@@ -24,9 +24,11 @@ abstract class BaseFragment<B : ViewBinding, VM : ViewModel> : Fragment() {
         }
         return binding.root
     }
+
     override fun onDestroy() {
         super.onDestroy()
     }
+
     override fun onPause() {
         super.onPause()
     }

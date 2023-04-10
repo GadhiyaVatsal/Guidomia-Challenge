@@ -3,7 +3,7 @@ package bell.test.guidomia_challenge.ui.cars.fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
-import bell.test.guidomia_challenge.ui.cars.repository.CarRepository
+import bell.test.guidomia_challenge.ui.cars.repository.ICarRepository
 import bell.test.guidomia_challenge.utils.BaseViewModel
 import bell.test.guidomia_challenge.utils.Constants
 import bell.test.guidomia_challenge.utils.helper.FunctionHelper
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CarsHomeViewModel @Inject constructor(
-    private val carRepository: CarRepository,
+    private val carRepository: ICarRepository,
 ) : BaseViewModel() {
 
     private var _carEntityData = MutableLiveData<ArrayList<CarEntity>>()
@@ -33,9 +33,11 @@ class CarsHomeViewModel @Inject constructor(
     private var currentList = ArrayList<CarEntity>()
     val loading = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
+
     init {
         fetchData()
     }
+
     fun fetchData() {
         carRepository.getCars().observeForever { resource ->
             when(resource.status) {
@@ -59,6 +61,7 @@ class CarsHomeViewModel @Inject constructor(
             }
         }
     }
+
     private fun buildFilterData() {
         val makeFilter = ArrayList<String>().apply {
             add(Constants.ANY_MAKE)
@@ -74,6 +77,7 @@ class CarsHomeViewModel @Inject constructor(
         _makeFilterData.postValue(makeFilter)
         _modelFilterData.postValue(modelFilter)
     }
+
     fun filter(make: String, model: String) {
         carRepository.filter(make, model).observeForever { resource ->
             when (resource.status) {
@@ -95,6 +99,7 @@ class CarsHomeViewModel @Inject constructor(
             }
         }
     }
+
     fun expandContainer(position: Int, isFirst: Boolean = false) {
         _carEntityData.postValue(FunctionHelper.expandContainerHelper(position, isFirst, currentList))
     }

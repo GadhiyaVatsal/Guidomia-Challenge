@@ -15,12 +15,16 @@ object FunctionHelper {
         }
     }
 
-    fun showShortToast(context: Context, msg: String){
+    fun showShortToast(context: Context, msg: String) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
-    fun expandContainerHelper(position: Int, isFirst: Boolean = false, currentList: ArrayList<CarEntity>): ArrayList<CarEntity> {
-        if(isFirst) currentList[position].expanded = true
+    fun expandContainerHelper(
+        position: Int,
+        isFirst: Boolean = false,
+        currentList: ArrayList<CarEntity>
+    ): ArrayList<CarEntity> {
+        if (isFirst) currentList[position].expanded = true
         else currentList[position].expanded =
             !currentList[position].expanded
 

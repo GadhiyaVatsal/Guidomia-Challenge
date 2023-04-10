@@ -1,25 +1,19 @@
 package bell.test.guidomia_challenge.ui
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.liveData
 import bell.test.guidomia_challenge.ui.cars.fragment.CarsHomeViewModel
 import bell.test.guidomia_challenge.ui.cars.fragment.entity.CarEntity
-import bell.test.guidomia_challenge.ui.cars.repository.CarRepository
+import bell.test.guidomia_challenge.ui.cars.repository.ICarRepository
 import bell.test.guidomia_challenge.util.Helper
 import bell.test.guidomia_challenge.utils.helper.Resource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.*
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.assertEquals
-import org.junit.Rule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
@@ -30,12 +24,12 @@ import org.mockito.junit.MockitoJUnitRunner
 class CarsHomeViewModelTest {
 
     @Mock
-    lateinit var carRepository: CarRepository
+    lateinit var carRepository: ICarRepository
     private lateinit var viewModel: CarsHomeViewModel
 
     @Before
     fun setUp() {
-        carRepository = mock(CarRepository::class.java)
+        carRepository = mock(ICarRepository::class.java)
         viewModel = CarsHomeViewModel(carRepository)
     }
 
