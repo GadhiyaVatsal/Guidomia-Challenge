@@ -34,10 +34,6 @@ class CarsHomeViewModel @Inject constructor(
     val loading = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
 
-    init {
-        fetchData()
-    }
-
     fun fetchData() {
         carRepository.getCars().observeForever { resource ->
             when(resource.status) {

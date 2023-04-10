@@ -43,6 +43,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.fetchData()
         carAdapter = CarListAdapter(viewModel)
         _includeCarHeaderBinding = CarHeaderBinding.bind(binding.root)
         _includeCardFilterBinding = CardFilterBinding.bind(binding.root)
