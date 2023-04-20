@@ -14,7 +14,7 @@ import bell.test.guidomia_challenge.ui.cars.fragment.viewholder.CarListViewHolde
 import javax.inject.Inject
 
 class CarListAdapter @Inject constructor(
-    val viewModel: CarsHomeViewModel
+    private val viewModel: CarsHomeViewModel
 )  : RecyclerView.Adapter<CarListViewHolder>() {
     lateinit var binding: CarItemLayoutBinding
 
@@ -46,7 +46,7 @@ class CarListAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): CarListViewHolder {
-        var viewHolder: RecyclerView.ViewHolder? = null
+        val viewHolder: RecyclerView.ViewHolder
         val inflater = LayoutInflater.from(viewGroup.context)
 
         binding = CarItemLayoutBinding.inflate(
