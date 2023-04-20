@@ -59,7 +59,7 @@ class CarRepository @Inject constructor(
         }
 
     private fun getCarFromJson(): List<CarEntity> {
-        var sharedPrefCarData = sharedPrefsHelper[Constants.CARS_DATA_KEY, ""]
+        var sharedPrefCarData = sharedPrefsHelper.get(Constants.CARS_DATA_KEY, "")
 
         if (sharedPrefCarData.isNullOrEmpty()) {
             sharedPrefCarData =

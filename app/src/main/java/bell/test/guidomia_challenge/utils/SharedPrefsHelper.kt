@@ -16,7 +16,7 @@ class SharedPrefsHelper @Inject constructor(
         mSharedPreferences.edit().putString(key, value).apply()
     }
 
-    operator fun get(key: String, defaultValue: String): String? {
+    fun get(key: String, defaultValue: String): String? {
         return mSharedPreferences.getString(key, defaultValue)
     }
 
