@@ -52,7 +52,5 @@
             app:layout_constraintBottom_toTopOf="@id/tvHeaderDescription"
             app:layout_constraintStart_toStartOf="@id/startGuideline"
             tools:text="@string/header_title" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </merge>

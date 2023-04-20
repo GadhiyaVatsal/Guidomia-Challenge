@@ -38,7 +38,7 @@
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/llHeader">
 
-        <include layout="@layout/card_filter" />
+        <include layout="@layout/car_filter" />
     </LinearLayout>
 
 
@@ -62,7 +62,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llFilter" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

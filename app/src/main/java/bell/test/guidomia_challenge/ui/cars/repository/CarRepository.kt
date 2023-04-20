@@ -30,7 +30,7 @@ class CarRepository @Inject constructor(
             val carData = getCarFromJson()
             carData[0].expanded = true
             emit(Resource.success(carData))
-            Log.d(Constants.TAG_CAR_REPOSITORY, "getCars: Total cars are ${carData.size} ")
+            Log.d(Constants.TAG_CAR_REPOSITORY, "getCars: Total cars are $carData")
         } catch (e: IOException) {
             emit(Resource.error("Error reading json file"))
             Log.e(Constants.TAG_CAR_REPOSITORY, "Error reading json file")
@@ -45,6 +45,7 @@ class CarRepository @Inject constructor(
             emit(Resource.loading())
             try {
                 val carData = getCarFromJson()
+                // AND condition check either of one filter is ANY and check other filter if both filter are selected then check OR condition for both filters value
                 val filteredData = carData.filter { carEntity ->
                     (make == Constants.ANY_MAKE || carEntity.make == make) &&
                             (model == Constants.ANY_MODEL || carEntity.model == model) ||

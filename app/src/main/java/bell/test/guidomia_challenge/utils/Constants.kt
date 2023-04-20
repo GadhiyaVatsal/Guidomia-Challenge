@@ -2,6 +2,7 @@ package bell.test.guidomia_challenge.utils
 
 object Constants {
     const val CARS_DATA_KEY = "cars_data_key"
+    const val SHARED_PREF_KEY = "guidomia-prefs"
 
     //Filters default options
     const val ANY_MAKE = "Any Make"

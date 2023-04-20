@@ -47,7 +47,7 @@ class CarsHomeViewModelTest {
 
         viewModel.fetchData()
 
-        assertEquals(expectedData, viewModel.carEntityData.value)
+        assertEquals(liveData.value?.data, viewModel.carEntityData.value)
         verify(carRepository).getCars()
     }
 
@@ -64,7 +64,7 @@ class CarsHomeViewModelTest {
 
         viewModel.filter(make, model)
 
-        assertEquals(expectedFilteredData, viewModel.carEntityData.value)
+        assertEquals(liveData.value?.data, viewModel.carEntityData.value)
         verify(carRepository).filter(make, model)
     }
 

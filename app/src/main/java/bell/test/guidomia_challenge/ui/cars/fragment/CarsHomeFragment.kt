@@ -1,7 +1,6 @@
 package bell.test.guidomia_challenge.ui.cars.fragment
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
@@ -17,8 +16,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import bell.test.guidomia_challenge.R
+import bell.test.guidomia_challenge.databinding.CarFilterBinding
 import bell.test.guidomia_challenge.databinding.CarHeaderBinding
-import bell.test.guidomia_challenge.databinding.CardFilterBinding
 import bell.test.guidomia_challenge.databinding.FragmentCarsHomeBinding
 import bell.test.guidomia_challenge.ui.cars.fragment.adapter.CarListAdapter
 import bell.test.guidomia_challenge.utils.BaseFragment
@@ -37,8 +36,8 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
     private val includeCarHeaderBinding: CarHeaderBinding get() = _includeCarHeaderBinding!!
     private var _includeCarHeaderBinding: CarHeaderBinding? = null
 
-    private val includeCardFilterBinding: CardFilterBinding get() = _includeCardFilterBinding!!
-    private var _includeCardFilterBinding: CardFilterBinding? = null
+    private val includeCarFilterBinding: CarFilterBinding get() = _includeCarFilterBinding!!
+    private var _includeCarFilterBinding: CarFilterBinding? = null
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,7 +45,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
         viewModel.fetchData()
         carAdapter = CarListAdapter(viewModel)
         _includeCarHeaderBinding = CarHeaderBinding.bind(binding.root)
-        _includeCardFilterBinding = CardFilterBinding.bind(binding.root)
+        _includeCarFilterBinding = CarFilterBinding.bind(binding.root)
         setUpView()
         setUpAdapter()
         setUpObserver()
@@ -69,7 +68,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
 
     private fun setUpAdapter() {
         makeSpinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item)
-        _includeCardFilterBinding?.apply {
+        _includeCarFilterBinding?.apply {
             makeSpinner.adapter = makeSpinnerAdapter
             makeSpinner.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
@@ -92,7 +91,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
         }
 
         modelSpinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item)
-        _includeCardFilterBinding?.apply {
+        _includeCarFilterBinding?.apply {
             modelSpinner.adapter = modelSpinnerAdapter
             modelSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -174,7 +173,7 @@ class CarsHomeFragment : BaseFragment<FragmentCarsHomeBinding, CarsHomeViewModel
     override val viewModel: CarsHomeViewModel by viewModels()
 
     companion object {
-        val TAG: String = Constants.TAG_CARS_FRAGMENT
+        const val TAG: String = Constants.TAG_CARS_FRAGMENT
     }
 
     override fun setBinding(
